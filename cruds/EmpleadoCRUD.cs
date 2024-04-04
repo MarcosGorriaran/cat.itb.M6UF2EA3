@@ -5,7 +5,7 @@ namespace cat.itb.M6UF2EA3.cruds
 {
     public class EmpleadoCRUD
     {
-        public static Empleado SelectById(int id)
+        /*public static Empleado SelectById(int id)
         {
             
         }
@@ -24,6 +24,6 @@ namespace cat.itb.M6UF2EA3.cruds
         public static void Delete(int id)
         {
 
-        }
+        }*/
     }
 }
