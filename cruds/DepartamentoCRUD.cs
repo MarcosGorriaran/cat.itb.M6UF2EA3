@@ -20,6 +20,15 @@ namespace cat.itb.M6UF2EA3.cruds
                 result = (session.Query<Departamento>().Where(searchTarget)).ToList();
             return result;
         }
+        public List<Departamento> SelectAllHQL(string hql)
+        {
+            IList<Departamento> dep;
+
+            IQuery query = session.CreateQuery(hql);
+            dep = query.List<Departamento>();
+
+            return dep.ToList();
+        }
         public List<Departamento> SelectAll()
         {
             List<Departamento> result;
