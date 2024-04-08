@@ -5,7 +5,7 @@ using NHibernate;
 
 namespace cat.itb.M6UF2EA3.cruds
 {
-    public class DepartamentoCRUD
+    public class DepartamentoCRUD : IDisposable
     {
         ISession session = SessionFactoryCloudzt.Open<Departamento>();
         public Departamento SelectById(int id)
@@ -20,7 +20,7 @@ namespace cat.itb.M6UF2EA3.cruds
                 result = (session.Query<Departamento>().Where(searchTarget)).ToList();
             return result;
         }
-        public List<Departamento> SelectAllHQL(string hql)
+        public List<Departamento> SelectAll(string hql)
         {
             IList<Departamento> dep;
 
@@ -72,6 +72,10 @@ namespace cat.itb.M6UF2EA3.cruds
                 session.Delete(departamento);
                 trans.Commit();
             }
+        }
+        public void Dispose()
+        {
+            session.Close();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using cat.itb.M6UF2EA3.cruds;
 using cat.itb.M6UF2EA3.model;
+using NHibernate.Criterion;
 
 namespace cat.itb.M6UF2EA3;
 
@@ -8,8 +9,8 @@ public class Driver
     public static void Main()
     {
         int option;
-        EmpleadoCRUD empCRUD = new EmpleadoCRUD();
-        DepartamentoCRUD depCRUD = new DepartamentoCRUD();
+        using EmpleadoCRUD empCRUD = new EmpleadoCRUD();
+        using DepartamentoCRUD depCRUD = new DepartamentoCRUD();
         List<Departamento> newDepartments = new List<Departamento>(new Departamento[] {
             new Departamento()
             {
@@ -24,15 +25,20 @@ public class Driver
         });
         do
         {
-            Console.WriteLine("1. Insert Departments\n" +
-                "2. Insert Employee\n" +
-                "3. Update Department 2\n" +
-                "4. Update employee Salary\n" +
-                "5. Delete Employee\n" +
-                "6. Show rich Employees\n" +
-                "7. Show employee department\n" +
-                "8. Show department employees\n"+
-                "9. Exit \n");
+            Console.WriteLine("1: 1.1 Insert Departments\n" +
+                "2: 1.2 Insert Employee\n" +
+                "3: 1.3 Update Department 2\n" +
+                "4: 1.4 Update employee Salary\n" +
+                "5: 1.5 Delete Employee\n" +
+                "6: 1.6 Show rich Employees\n" +
+                "7: 1.7 Show employee department\n" +
+                "8: 1.8 Show department employees\n"+
+                "9: 2.1 Show Departments HQL\n"+
+                "10: 2.2 Show Employees Criteria\n"+
+                "11: 2.3 Show Rich Employees Criteria\n"+
+                "12: 2.4 Show VENTAS loc HQL\n"+
+                "13: 2.5 Show all VENDEDOR ordered QueryOver\n"+
+                "19. Exit");
             option = Convert.ToInt32(Console.ReadLine());
             switch(option)
             {
@@ -91,24 +97,42 @@ public class Driver
                     }
                     break;
                 case 9:
+                    IList<Departamento> departments = depCRUD.SelectAll("select c from Departamento c");
+                    foreach(Departamento dep in departments)
+                    {
+                        Console.WriteLine(dep);
+                    }
+                    break;
+                case 10:
+                    List<Empleado> critEmployees = empCRUD.SelectAll(new List<ICriterion>());
+
+                    foreach (Empleado employee in critEmployees)
+                    {
+                        Console.WriteLine(employee);
+                       
+                    }
+                    break;
+                case 11:
+                    List<Empleado> critRichEmployees = empCRUD.SelectAll(new List<ICriterion>(new ICriterion[]{
+                        Expression.Where<Empleado>(emp=>emp.salary>2000)
+                    }));
+                    foreach (Empleado employee in critRichEmployees)
+                    {
+                        Console.WriteLine(employee);
+
+                    }
+                    break;
+                case 12:
+                    string ventasLoc = depCRUD.SelectAll("select c from Departamento c").First().Loc;
+                    Console.WriteLine(ventasLoc);
+                    break;
+                case 13:
+                    break;
+                case 19:
                     break;
                 default:
                     break;
             }
-        } while (option!=9);
-        
-        
-
-        
-
-        
-
-        
-
-       
-
-        
-
-        
+        } while (option!=9);  
     }
 }

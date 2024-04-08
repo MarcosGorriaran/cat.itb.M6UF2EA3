@@ -5,7 +5,7 @@ using NHibernate.Criterion;
 
 namespace cat.itb.M6UF2EA3.cruds
 {
-    public class EmpleadoCRUD
+    public class EmpleadoCRUD : IDisposable
     {
         private ISession session = SessionFactoryCloudzt.Open<Empleado>();
         public Empleado SelectById(int id)
@@ -26,12 +26,19 @@ namespace cat.itb.M6UF2EA3.cruds
         }
         public List<Empleado> SelectAll(string hql)
         {
-            IList<Empleado> emp;
+            IList<Empleado> dep;
 
             IQuery query = session.CreateQuery(hql);
-            emp = query.List<Empleado>();
+            dep = query.List<Empleado>();
 
-            return emp.ToList();
+            return dep.ToList();
+        }
+        public List<Empleado> SelectAll()
+        {
+            List<Empleado> result;
+
+            result = (session.Query<Empleado>()).ToList();
+            return result;
         }
 
         /**
@@ -50,6 +57,19 @@ namespace cat.itb.M6UF2EA3.cruds
 
             return empCrit.List<Empleado>().ToList();
         }
+        public List<Empleado> SelectAll(System.Linq.Expressions.Expression<Func<Empleado,bool>> where, System.Linq.Expressions.Expression<Func<Empleado, object>> orderBy,bool orderASC)
+        {
+            var emp = session.QueryOver<Empleado>().Where(emp=>true).OrderBy(orderBy);
+            List<Empleado> result;
+            if (orderASC)
+            {
+                result = emp.Asc.List().ToList();
+            }
+            else
+            {
+                result = emp.Desc.List().ToList();
+            }
+        }
         public string Insert(Empleado employee)
         {
             string showInsertResult;
@@ -58,7 +78,7 @@ namespace cat.itb.M6UF2EA3.cruds
                 {
                     session.Save(employee);
                     transaction.Commit();
-                    showInsertResult = $"Departamento {employee.surname} ha sido insertado";
+                    showInsertResult = $"Empleado {employee.surname} ha sido insertado";
                 }
             
             return showInsertResult;
@@ -90,6 +110,10 @@ namespace cat.itb.M6UF2EA3.cruds
 
                 }
                 
+        }
+        public void Dispose()
+        {
+            session.Close();
         }
     }
 }

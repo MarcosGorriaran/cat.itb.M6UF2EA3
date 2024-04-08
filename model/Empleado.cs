@@ -11,5 +11,10 @@
         public virtual float salary { get; set; }
         public virtual float? comision { get; set; }
         public virtual Departamento department { get; set; }
+
+        public override string ToString()
+        {
+            return $"surname: {surname}\njob: {job}";
+        }
     }
 }
