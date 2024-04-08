@@ -59,7 +59,7 @@ namespace cat.itb.M6UF2EA3.cruds
         }
         public List<Empleado> SelectAll(System.Linq.Expressions.Expression<Func<Empleado,bool>> where, System.Linq.Expressions.Expression<Func<Empleado, object>> orderBy,bool orderASC)
         {
-            var emp = session.QueryOver<Empleado>().Where(emp=>true).OrderBy(orderBy);
+            var emp = session.QueryOver<Empleado>().Where(where).OrderBy(orderBy);
             List<Empleado> result;
             if (orderASC)
             {
@@ -69,6 +69,7 @@ namespace cat.itb.M6UF2EA3.cruds
             {
                 result = emp.Desc.List().ToList();
             }
+            return result;
         }
         public string Insert(Empleado employee)
         {

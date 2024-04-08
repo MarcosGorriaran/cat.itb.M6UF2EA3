@@ -38,6 +38,7 @@ public class Driver
                 "11: 2.3 Show Rich Employees Criteria\n"+
                 "12: 2.4 Show VENTAS loc HQL\n"+
                 "13: 2.5 Show all VENDEDOR ordered QueryOver\n"+
+                "14: 2.6 Show workers that start with S HQL\n"+
                 "19. Exit");
             option = Convert.ToInt32(Console.ReadLine());
             switch(option)
@@ -114,7 +115,7 @@ public class Driver
                     break;
                 case 11:
                     List<Empleado> critRichEmployees = empCRUD.SelectAll(new List<ICriterion>(new ICriterion[]{
-                        Expression.Where<Empleado>(emp=>emp.salary>2000)
+                        Restrictions.Where<Empleado>(emp=>emp.salary>2000)
                     }));
                     foreach (Empleado employee in critRichEmployees)
                     {
@@ -123,16 +124,32 @@ public class Driver
                     }
                     break;
                 case 12:
-                    string ventasLoc = depCRUD.SelectAll("select c from Departamento c").First().Loc;
+                    string ventasLoc = depCRUD.SelectAll("select c from Departamento c where c.Name='VENTAS'").First().Loc;
                     Console.WriteLine(ventasLoc);
                     break;
                 case 13:
+                    List<Empleado> sellers = empCRUD.SelectAll(emp=>emp.job=="VENDEDOR",emp=>emp.salary,false);
+
+                    foreach(Empleado emp in sellers)
+                    {
+                        Console.WriteLine($"Salary: {emp.salary}");
+                        Console.WriteLine(emp);
+                    }
+                    break;
+                case 14:
+                    List<Empleado> workersWithS = empCRUD.SelectAll("SELECT e from Empleado e where e.surname like 'S%'");
+                    foreach(Empleado emp in workersWithS)
+                    {
+                        Console.WriteLine($"Surname: {emp.surname}");
+                        Console.WriteLine($"Job: {emp.job}");
+                        Console.WriteLine($"salary: {emp.salary}");
+                    }
                     break;
                 case 19:
                     break;
                 default:
                     break;
             }
-        } while (option!=9);  
+        } while (option!=19);  
     }
 }
